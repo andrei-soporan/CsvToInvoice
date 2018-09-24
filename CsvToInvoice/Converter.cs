@@ -170,7 +170,7 @@ namespace CsvToInvoice
 
         protected string CreateInvoiceTableFromTemplate()
         {
-            string outInvoiceTableName = Path.GetFileNameWithoutExtension(Utils.GetInvoiceTableName()) + "_" + DateTime.Now.ToString("MM-dd-yyyy") + Path.GetExtension(Utils.GetInvoiceTableName());
+            string outInvoiceTableName = Path.GetFileNameWithoutExtension(Utils.GetInvoiceTableName()) + "_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + Path.GetExtension(Utils.GetInvoiceTableName());
 
             string templateInvoicePath = Utils.GetDBTemplatePath() + Utils.GetInvoiceTableName();
             string outInvoicePath = Utils.GetOutputPath() + outInvoiceTableName;
