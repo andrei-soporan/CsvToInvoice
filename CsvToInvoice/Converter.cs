@@ -128,6 +128,7 @@ namespace CsvToInvoice
             invoice.Cantitate = Double.Parse(fields[6]);
 
             invoice.Valoare = Double.Parse(fields[7]);
+            invoice.Valoare = invoice.Valoare * invoice.Cantitate;
 
             invoice.Tva = 0;
 
