@@ -1,0 +1,28 @@
+IE table mapping
+
+NR_IESIRE 	- CSV("Document number") - field[1]
+COD 		- select COD from CLIENTI where DENUMIRE = csv("Customer") - field[0]
+DATA		- CSV("Invoice date") - field[2]
+SCADENT		- CSV("Invoice date") - field[2]
+TIP			- NULL
+TVAI		- 0
+DEN_TIP		- "Nedefinit"
+GESTIUNE	- NULL	
+DEN_GEST	- NULL
+COD_ART		- NULL
+DEN_ART		- CSV("Product Name") - field[3]
+TVA_ART		- 0
+UM			- "BUC"
+CANTITATE	- CSV("Qty") - field[6]
+VALOARE		- CSV("Net Value") - field[7]
+TVA			- 0
+CONT		- if ("Taxa Transport") then 704
+			- else if ( "Discount Valoric") then 767
+			- else 707.01
+GRUPA		- NULL
+N_NULLFLAG	- 0
+
+
+
+OleDB VFP provider
+https://www.microsoft.com/en-ph/download/confirmation.aspx?id=14839
