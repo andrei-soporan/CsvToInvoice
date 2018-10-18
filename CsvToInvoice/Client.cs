@@ -8,6 +8,15 @@ namespace CsvToInvoice
 {
     class Client
     {
+
+        public static int NULL_INT = 0;
+
+        public static double NULL_DOUBLE = 0.0;
+
+        public static string NULL_STRING = "";
+
+        public static DateTime NULL_DATE;
+
         public Client()
         {
 
@@ -30,5 +39,8 @@ namespace CsvToInvoice
         public string Analitic { get; set; }
 
         public string Adresa { get; set; }
+
+        public int NullFlag { get; set; }
+
     }
 }

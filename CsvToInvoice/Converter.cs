@@ -20,7 +20,10 @@ namespace CsvToInvoice
 
         protected readonly string InvoiceTableName;
 
-        protected ClientTable clnTable;
+        ClientTable clientTable;
+
+        protected int ClientId = 0;
+
 
         public Converter()
         {
@@ -39,15 +42,14 @@ namespace CsvToInvoice
 
                 CsvReader csvReader = new CsvReader(Utils.GetDataPath() + "\\" + InCsvFile);
 
-                clnTable = new ClientTable(Utils.GetDataPath(), ClientTableName);
 
-                clnTable.ReadClientTable();
+                string outClientTableName = CreateClientTableFromTemplate();
+                clientTable = new ClientTable(Utils.GetOutputPath(), outClientTableName);
+
 
                 string outInvoiceTableName = CreateInvoiceTableFromTemplate();
-
                 InvoiceTable invoiceTable = new InvoiceTable(Utils.GetOutputPath(), outInvoiceTableName);
 
-                //invoiceTable.TruncateTable();
 
                 string[] fields = new string[20];
 
@@ -57,8 +59,10 @@ namespace CsvToInvoice
                 {
                     try
                     {
-                        Invoice invoice = CreateInvoiceFromCsv(fields);
+                        Client client = CreateClientFromCsv(fields);
+                        clientTable.Add(client);
 
+                        Invoice invoice = CreateInvoiceFromCsv(fields);
                         invoiceTable.Add(invoice);
 
                         TotalEntries = csvReader.GetLineNumber() != -1 ? csvReader.GetLineNumber() : TotalEntries;
@@ -72,17 +76,17 @@ namespace CsvToInvoice
                     }
                 }
 
-                Trace.TraceInformation("\n\nStart inserare in tabela the facturi: {0}", DateTime.Now);
+                Trace.TraceInformation("\n\nStart inserare in tabela de clienti: {0}", DateTime.Now);
+                clientTable.InsertAll();
+                Trace.TraceInformation("Terminat de inserat in tabela de clienti: {0}\n\n", DateTime.Now);
 
+                Trace.TraceInformation("\n\nStart inserare in tabela de facturi: {0}", DateTime.Now);
                 invoiceTable.InsertAll();
-
-                Trace.TraceInformation("Terminat de inserat in tabela the facturi: {0}\n\n", DateTime.Now);
+                Trace.TraceInformation("Terminat de inserat in tabela de facturi: {0}\n\n", DateTime.Now);
 
 
                 DateTime endDate = DateTime.Now;
-
                 Trace.TraceInformation(GetStats(startDate, endDate, TotalEntries, TotalErrors));
-
             }
             catch (SystemException ex)
             {
@@ -101,7 +105,7 @@ namespace CsvToInvoice
 
             string NumeClient = Utils.RemoveDiacritics(fields[0]);
 
-            invoice.Cod = clnTable.GetClientByName(NumeClient).Cod;
+            invoice.Cod = clientTable.GetClientByName(NumeClient).Cod;
 
             string strData = fields[2];
             invoice.Data = DateTime.Parse(strData);
@@ -141,6 +145,27 @@ namespace CsvToInvoice
             return invoice;
 
         }
+
+
+        public Client CreateClientFromCsv(string[] fields)
+        {
+            Client client = new Client();
+
+            client.Cod = (++ClientId).ToString("D5");
+
+            string numeClient = Utils.RemoveDiacritics(fields[0]);
+            client.Denumire = numeClient;
+
+            client.Analitic = "4111." + client.Cod;
+
+            client.Adresa = Utils.RemoveDiacritics(fields[9]);
+
+            client.NullFlag = 0;
+
+            return client;
+
+        }
+
 
         protected string GetCont(string productName)
         {
@@ -182,5 +207,20 @@ namespace CsvToInvoice
 
             return outInvoiceTableName;
         }
+
+        protected string CreateClientTableFromTemplate()
+        {
+            string outClientTableName = Path.GetFileNameWithoutExtension(Utils.GetClientTableName()) + "_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + Path.GetExtension(Utils.GetClientTableName());
+
+            string templateClientPath = Utils.GetDBTemplatePath() + Utils.GetClientTableName();
+            string outClientPath = Utils.GetOutputPath() + outClientTableName;
+
+            Directory.CreateDirectory(Path.GetDirectoryName(outClientPath));
+
+            File.Copy(templateClientPath, outClientPath);
+
+            return outClientTableName;
+        }
+
     }
 }

@@ -63,6 +63,115 @@ namespace CsvToInvoice
             }
         }
 
+        public void Add(Client client)
+        {
+            Client existingClient = (Client)Clients[client.Denumire.ToLower().TrimEnd()];
+
+            if (existingClient != null)
+                //throw new SystemException("Clientul cu numele: " + existingClient.Denumire + " exista in tabela de clienti!");
+                return;
+
+            Clients.Add(client.Denumire.ToString().ToLower().TrimEnd(), client);
+        }
+
+
+        public void InsertAll()
+        {
+            string ConnectionString = Utils.GetConnectionString(DbfPath);
+
+            using (OleDbConnection con = new OleDbConnection(ConnectionString))
+            {
+                con.Open();
+
+                foreach (DictionaryEntry s in Clients)
+                {
+                    Insert(con, (Client)s.Value);
+                }
+
+                con.Close();
+            }
+        }
+
+
+        protected void Insert(OleDbConnection con, Client client)
+        {
+
+            var sql = String.Format("insert into {0} ( [COD],[DENUMIRE],[COD_FISCAL],[REG_COM],[ANALITIC],[ZS],[ADRESA],[JUDET],[BANCA],[CONT_BANCA],[FILIALA],[DELEGAT],[BI_SERIE],[BI_NUMAR],[BI_POL],[MASINA],[INF_SUPL],[AGENT],[DEN_AGENT],[GRUPA],[TIP_TERT],[TARA],[TEL],[EMAIL]) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                DbfTableName);
+
+            OleDbCommand cmd = new OleDbCommand(sql, con);
+
+            cmd.Parameters.Add(new OleDbParameter("parmCOD", client.Cod));
+            cmd.Parameters.Add(new OleDbParameter("parmDENUMIRE", client.Denumire));
+            cmd.Parameters.Add(new OleDbParameter("parmCOD_FISCAL", client.CodFiscal));
+            cmd.Parameters.Add(new OleDbParameter("parmREG_COM", client.RegCom));
+            cmd.Parameters.Add(new OleDbParameter("parmANALITIC", client.Analitic));
+            cmd.Parameters.Add(new OleDbParameter("parmZS", Client.NULL_INT));
+            cmd.Parameters.Add(new OleDbParameter("parmADRESA", client.Adresa));
+            cmd.Parameters.Add(new OleDbParameter("parmJUDET", Client.NULL_STRING));
+
+            cmd.Parameters.Add(new OleDbParameter("parmBANCA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmCONT_BANCA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmFILIALA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmDELEGAT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmBI_SERIE", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmBI_NUMAR", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmBI_POL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmMASINA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmINF_SUPL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmAGENT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmDEN_AGENT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmGRUPA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmTIP_TERT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmTARA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmTEL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmEMAIL", Client.NULL_STRING));
+
+
+            cmd.ExecuteNonQuery();
+        }
+
+            /*
+            var sql = String.Format("insert into {0} ( [COD],[DENUMIRE],[COD_FISCAL],[REG_COM],[ANALITIC],[ZS],[DISCOUNT],[ADRESA],[JUDET],[BANCA],[CONT_BANCA],[FILIALA],[DELEGAT],[BI_SERIE],[BI_NUMAR],[BI_POL],[MASINA],[INF_SUPL],[AGENT],[DEN_AGENT],[GRUPA],[TIP_TERT],[TARA],[TEL],[EMAIL],[IS_TVA],[BLOCAT],[DATA_V_TVA],[CB_CARD],[DATA_S_TVA],[_NULLFLAGS]) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                DbfTableName);
+
+            OleDbCommand cmd = new OleDbCommand(sql, con);
+
+            cmd.Parameters.Add(new OleDbParameter("parmCOD", client.Cod));
+            cmd.Parameters.Add(new OleDbParameter("parmDENUMIRE", client.Denumire));
+            cmd.Parameters.Add(new OleDbParameter("parmCOD_FISCAL", client.CodFiscal));
+            cmd.Parameters.Add(new OleDbParameter("parmREG_COM", client.RegCom));
+            cmd.Parameters.Add(new OleDbParameter("parmANALITIC", client.Analitic));
+            cmd.Parameters.Add(new OleDbParameter("parmZS", Client.NULL_INT));
+            cmd.Parameters.Add(new OleDbParameter("parmDISCOUNT", Client.NULL_DOUBLE));
+            cmd.Parameters.Add(new OleDbParameter("parmADRESA", client.Adresa));
+            cmd.Parameters.Add(new OleDbParameter("parmJUDET", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmBANCA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmCONT_BANCA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmFILIALA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmDELEGAT", Client.NULL_STRING)); 
+            cmd.Parameters.Add(new OleDbParameter("parmBI_SERIE", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmBI_NUMAR", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmBI_POL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmMASINA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmINF_SUPL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmAGENT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmDEN_AGENT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmGRUPA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmTIP_TERT", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmTARA", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmTEL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmEMAIL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmIS_TVA", Client.NULL_INT));
+            cmd.Parameters.Add(new OleDbParameter("parmBLOCAT", Client.NULL_INT));
+            cmd.Parameters.Add(new OleDbParameter("parmDATA_V_TVA", Client.NULL_DATE));
+            cmd.Parameters.Add(new OleDbParameter("parmCB_CARD", ""));
+            cmd.Parameters.Add(new OleDbParameter("parmDATA_S_TVA", Client.NULL_DATE));
+            cmd.Parameters.Add(new OleDbParameter("parmN_NULLFLAG", client.NullFlag));
+
+            cmd.ExecuteNonQuery();
+            */
+        //}
 
     }
 }
