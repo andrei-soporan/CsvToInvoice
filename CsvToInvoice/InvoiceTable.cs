@@ -81,8 +81,10 @@ namespace CsvToInvoice
             }
         }
 
-        public void InsertAll()
+        public int InsertAll()
         {
+            int nCount = 0;
+
             string ConnectionString = Utils.GetConnectionString(DbfPath);
 
             using (OleDbConnection con = new OleDbConnection(ConnectionString))
@@ -92,10 +94,12 @@ namespace CsvToInvoice
                 foreach (Invoice invoice in Invoices)
                 {
                     Insert(con, invoice);
+                    ++nCount;
                 }
 
                 con.Close();
             }
+            return nCount;
         }
 
 
@@ -128,6 +132,7 @@ namespace CsvToInvoice
             cmd.Parameters.Add(new OleDbParameter("parmN_NULLFLAG", invoice.NullFlag));
 
             cmd.ExecuteNonQuery();
+            cmd.Dispose();
 
         }
     }

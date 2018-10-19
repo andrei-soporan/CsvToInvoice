@@ -24,12 +24,17 @@ namespace CsvToInvoice
 
         protected int ClientId = 0;
 
+        DateTime minDate = DateTime.MaxValue;
+
+        DateTime maxDate = DateTime.MinValue;
+
 
         public Converter()
         {
             InCsvFile = Utils.GetInCsvFileName();
             ClientTableName = Utils.GetClientTableName();
             InvoiceTableName = Utils.GetInvoiceTableName();
+            ClientId = Utils.GetClientStartCode();
         }
 
         public void Run()
@@ -77,16 +82,19 @@ namespace CsvToInvoice
                 }
 
                 Trace.TraceInformation("\n\nStart inserare in tabela de clienti: {0}", DateTime.Now);
-                clientTable.InsertAll();
-                Trace.TraceInformation("Terminat de inserat in tabela de clienti: {0}\n\n", DateTime.Now);
+                int nClientCount = clientTable.InsertAll();
+                RenameOutputTable(Utils.GetOutputPath(), outClientTableName, minDate, maxDate);
+                Trace.TraceInformation("Import clienti finalizat la: {0}\n\n", DateTime.Now);
+
 
                 Trace.TraceInformation("\n\nStart inserare in tabela de facturi: {0}", DateTime.Now);
-                invoiceTable.InsertAll();
-                Trace.TraceInformation("Terminat de inserat in tabela de facturi: {0}\n\n", DateTime.Now);
+                int nInvoiceCount = invoiceTable.InsertAll();
+                RenameOutputTable(Utils.GetOutputPath(), outInvoiceTableName, minDate, maxDate);
+                Trace.TraceInformation("Import facturi finalizat la: {0} \n\n", DateTime.Now);
 
 
                 DateTime endDate = DateTime.Now;
-                Trace.TraceInformation(GetStats(startDate, endDate, TotalEntries, TotalErrors));
+                Trace.TraceInformation(GetStats(startDate, endDate, TotalEntries, nClientCount, nInvoiceCount, TotalErrors));
             }
             catch (SystemException ex)
             {
@@ -110,6 +118,16 @@ namespace CsvToInvoice
             string strData = fields[2];
             invoice.Data = DateTime.Parse(strData);
             invoice.Scadent = DateTime.Parse(strData);
+
+            if ( minDate > invoice.Data)
+            {
+                minDate = invoice.Data;
+            }
+
+            if (maxDate < invoice.Data)
+            {
+                maxDate = invoice.Data;
+            }
 
             invoice.Tip = "";
 
@@ -186,18 +204,17 @@ namespace CsvToInvoice
             return cont;
         }
 
-        protected string GetStats(DateTime startDate, DateTime endDate, long TotalEntries, long TotalErrors)
+        protected string GetStats(DateTime startDate, DateTime endDate, long TotalEntries, long clientCount, long invoiceCount, long TotalErrors)
         {
-            String strMessage = String.Format("\nImport start: {0}\nNr. total de intrati in *.csv: {1}\nNr. total de intrari importate: {2}\nNr. total de erori: {3}\nImport finalizat la: {4}",
-                startDate, TotalEntries, TotalEntries - TotalErrors, TotalErrors, endDate);
+            String strMessage = String.Format("\n Import start: {0}\n Nr. total de intrati in *.csv: {1}\n Nr. total de clienti: {2}\n Nr. total de facturi: {3}\n Nr. total de erori: {4}\n Import finalizat la: {5}",
+                startDate, TotalEntries, clientCount, invoiceCount, TotalErrors, endDate);
 
             return strMessage;
         }
 
         protected string CreateInvoiceTableFromTemplate()
         {
-            string outInvoiceTableName = Path.GetFileNameWithoutExtension(Utils.GetInvoiceTableName()) + "_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + Path.GetExtension(Utils.GetInvoiceTableName());
-
+            string outInvoiceTableName = Utils.GetInvoiceTableName();
             string templateInvoicePath = Utils.GetDBTemplatePath() + Utils.GetInvoiceTableName();
             string outInvoicePath = Utils.GetOutputPath() + outInvoiceTableName;
 
@@ -210,7 +227,7 @@ namespace CsvToInvoice
 
         protected string CreateClientTableFromTemplate()
         {
-            string outClientTableName = Path.GetFileNameWithoutExtension(Utils.GetClientTableName()) + "_" + DateTime.Now.ToString("dd-MM-yyyy_HH-mm-ss") + Path.GetExtension(Utils.GetClientTableName());
+            string outClientTableName = Utils.GetClientTableName();
 
             string templateClientPath = Utils.GetDBTemplatePath() + Utils.GetClientTableName();
             string outClientPath = Utils.GetOutputPath() + outClientTableName;
@@ -220,6 +237,12 @@ namespace CsvToInvoice
             File.Copy(templateClientPath, outClientPath);
 
             return outClientTableName;
+        }
+
+        protected void RenameOutputTable(string outputPath, string tableName, DateTime startDate, DateTime endDate)
+        {
+            string newTableName = Path.GetFileNameWithoutExtension(tableName) + "_" + startDate.ToString("dd-MM-yyyy") + "_" + endDate.ToString("dd-MM-yyyy") + Path.GetExtension(Utils.GetClientTableName());
+            System.IO.File.Move(outputPath + tableName, outputPath + newTableName);
         }
 
     }

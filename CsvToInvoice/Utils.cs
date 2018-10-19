@@ -80,6 +80,19 @@ namespace CsvToInvoice
             return InvoiceTableName;
         }
 
+        public static int GetClientStartCode()
+        {
+            int startCode = 0;
+            string strStartCode = ConfigurationManager.AppSettings["ClientStartCode"];
+
+            if (!Int32.TryParse(strStartCode, out startCode))
+            {
+                startCode = -1;
+            }
+
+            return startCode;
+        }
+
         public static string ArrayToString(string[] fields)
         {
             return string.Join(" ", fields);
