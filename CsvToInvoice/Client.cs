@@ -15,7 +15,7 @@ namespace CsvToInvoice
 
         public static string NULL_STRING = "";
 
-        public static DateTime NULL_DATE;
+        // public static DateTime NULL_DATE;
 
         public Client()
         {
