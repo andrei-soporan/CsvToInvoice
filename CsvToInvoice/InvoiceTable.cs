@@ -14,7 +14,10 @@ namespace CsvToInvoice
 
         protected readonly string DbfPath;
 
-        IList<Invoice> Invoices = new List<Invoice>();
+        IList<Invoice> InvoiceItems = new List<Invoice>();
+
+        HashSet<string> InvoiceCodes = new HashSet<string>();
+
 
         public InvoiceTable(string path, string dbfTableName)
         {
@@ -24,7 +27,12 @@ namespace CsvToInvoice
 
         public void Add(Invoice invoice)
         {
-            Invoices.Add(invoice);
+            InvoiceItems.Add(invoice);
+        }
+
+        public int GetInvoiceCount()
+        {
+            return InvoiceCodes.Count();
         }
 
         public void TruncateTable()
@@ -78,12 +86,13 @@ namespace CsvToInvoice
                 con.Open();
 
                 cmd.ExecuteNonQuery();
+                cmd.Dispose();
             }
         }
 
         public int InsertAll()
         {
-            int nCount = 0;
+             int nCount = 0;
 
             string ConnectionString = Utils.GetConnectionString(DbfPath);
 
@@ -91,14 +100,16 @@ namespace CsvToInvoice
             {
                 con.Open();
 
-                foreach (Invoice invoice in Invoices)
+                foreach (Invoice invoice in InvoiceItems)
                 {
                     Insert(con, invoice);
                     ++nCount;
+                    InvoiceCodes.Add(invoice.NrIesire);
                 }
 
                 con.Close();
             }
+
             return nCount;
         }
 

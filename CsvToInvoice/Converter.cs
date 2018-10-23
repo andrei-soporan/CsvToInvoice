@@ -88,13 +88,13 @@ namespace CsvToInvoice
 
 
                 Trace.TraceInformation("\n\nStart inserare in tabela de facturi: {0}", DateTime.Now);
-                int nInvoiceCount = invoiceTable.InsertAll();
+                int nInvoiceItems = invoiceTable.InsertAll();
                 RenameOutputTable(Utils.GetOutputPath(), outInvoiceTableName, minDate, maxDate);
                 Trace.TraceInformation("Import facturi finalizat la: {0} \n\n", DateTime.Now);
 
 
                 DateTime endDate = DateTime.Now;
-                Trace.TraceInformation(GetStats(startDate, endDate, TotalEntries, nClientCount, nInvoiceCount, TotalErrors));
+                Trace.TraceInformation(GetStats(startDate, endDate, TotalEntries, nClientCount, nInvoiceItems, invoiceTable.GetInvoiceCount(), TotalErrors));
             }
             catch (SystemException ex)
             {
@@ -204,10 +204,10 @@ namespace CsvToInvoice
             return cont;
         }
 
-        protected string GetStats(DateTime startDate, DateTime endDate, long TotalEntries, long clientCount, long invoiceCount, long TotalErrors)
+        protected string GetStats(DateTime startDate, DateTime endDate, long TotalEntries, long clientCount, long invoiceItems, long invoiceCount, long TotalErrors)
         {
-            String strMessage = String.Format("\n Import start: {0}\n Nr. total de intrati in *.csv: {1}\n Nr. total de clienti: {2}\n Nr. total de facturi: {3}\n Nr. total de erori: {4}\n Import finalizat la: {5}",
-                startDate, TotalEntries, clientCount, invoiceCount, TotalErrors, endDate);
+            String strMessage = String.Format("\n Import start: {0}\n Nr. total de intrati in *.csv: {1}\n Nr. total de clienti: {2}\n Nr. total de facturi: {3}\n Nr. total de linii in facturi: {4}\n Nr. total de erori: {5}\n Import finalizat la: {6}",
+                startDate, TotalEntries, clientCount, invoiceCount, invoiceItems, TotalErrors, endDate);
 
             return strMessage;
         }
