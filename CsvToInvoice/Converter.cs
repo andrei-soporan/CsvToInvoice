@@ -167,16 +167,32 @@ namespace CsvToInvoice
 
         public Client CreateClientFromCsv(string[] fields)
         {
-            Client client = new Client();
-
-            client.Cod = (++ClientId).ToString("D5");
-
             string numeClient = Utils.RemoveDiacritics(fields[0]);
+
+            Client client;
+
+            try
+            {
+                client = clientTable.GetClientByName(numeClient);
+
+                return client;
+            }
+            catch (SystemException ex)
+            {
+            }
+                
+
+            client = new Client();
+
+            client.Cod = (ClientId++).ToString("D5");
+
             client.Denumire = numeClient;
 
             client.Analitic = "4111." + client.Cod;
 
-            client.Adresa = Utils.RemoveDiacritics(fields[9]);
+            client.Adresa = Utils.RemoveDiacritics(fields[12]);
+            client.Adresa += ", " + Utils.RemoveDiacritics(fields[13]);
+            client.Judet = Utils.RemoveDiacritics(fields[14]);
 
             client.NullFlag = 0;
 

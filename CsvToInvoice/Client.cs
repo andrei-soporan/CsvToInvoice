@@ -40,6 +40,8 @@ namespace CsvToInvoice
 
         public string Adresa { get; set; }
 
+        public string Judet { get; set; }
+
         public int NullFlag { get; set; }
 
     }

@@ -113,7 +113,7 @@ namespace CsvToInvoice
             cmd.Parameters.Add(new OleDbParameter("parmANALITIC", client.Analitic));
             cmd.Parameters.Add(new OleDbParameter("parmZS", Client.NULL_INT));
             cmd.Parameters.Add(new OleDbParameter("parmADRESA", client.Adresa));
-            cmd.Parameters.Add(new OleDbParameter("parmJUDET", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmJUDET", client.Judet));
 
             cmd.Parameters.Add(new OleDbParameter("parmBANCA", Client.NULL_STRING));
             cmd.Parameters.Add(new OleDbParameter("parmCONT_BANCA", Client.NULL_STRING));
