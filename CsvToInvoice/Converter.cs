@@ -186,13 +186,13 @@ namespace CsvToInvoice
 
             client.Cod = (ClientId++).ToString("D5");
 
-            client.Denumire = numeClient;
+            client.Denumire = numeClient.ToUpper();
 
             client.Analitic = "4111." + client.Cod;
 
             client.Adresa = Utils.RemoveDiacritics(fields[12]);
             client.Adresa += ", " + Utils.RemoveDiacritics(fields[13]);
-            client.Judet = Utils.RemoveDiacritics(fields[14]);
+            client.Judet = Utils.GetCountyShortcut(Utils.RemoveDiacritics(fields[14]));
 
             client.NullFlag = 0;
 

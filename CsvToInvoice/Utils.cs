@@ -122,5 +122,150 @@ namespace CsvToInvoice
         }
 
 
+        public static string GetCountyShortcut(string strCountyName)
+        {
+            string strCountyShortcut = "";
+
+            switch (strCountyName.ToUpper()) {
+                case "ALBA" :
+                    strCountyShortcut = "AB";
+                    break;
+                case "ARAD" :
+                    strCountyShortcut = "AR";
+                    break;
+                case "ARGES" :
+                    strCountyShortcut = "AG";
+                    break;
+                case "BACAU":
+                    strCountyShortcut = "BC";
+                    break;
+                case "BIHOR":
+                    strCountyShortcut = "BH";
+                    break;
+                case "BISTRITA-NASAUD":
+                    strCountyShortcut = "BN";
+                    break;
+                case "BOTOSANI":
+                    strCountyShortcut = "BT";
+                    break;
+                case "BRAILA":
+                    strCountyShortcut = "BR";
+                    break;
+                case "BRASOV":
+                    strCountyShortcut = "BV";
+                    break;
+                case "BUZAU":
+                    strCountyShortcut = "BZ";
+                    break;
+                case "CALARASI":
+                    strCountyShortcut = "CL";
+                    break;
+                case "CARAS-SEVERIN":
+                    strCountyShortcut = "CS";
+                    break;
+                case "CLUJ":
+                    strCountyShortcut = "CJ";
+                    break;
+                case "CONSTANTA":
+                    strCountyShortcut = "CT";
+                    break;
+                case "COVASNA":
+                    strCountyShortcut = "CV";
+                    break;
+                case "DIMBOVITA":
+                    strCountyShortcut = "DB";
+                    break;
+                case "DAMBOVITA":
+                    strCountyShortcut = "DB";
+                    break;
+                case "DOLJ":
+                    strCountyShortcut = "DJ";
+                    break;
+                case "GALATI":
+                    strCountyShortcut = "GL";
+                    break;
+                case "GIURGIU":
+                    strCountyShortcut = "GR";
+                    break;
+                case "GORJ":
+                    strCountyShortcut = "GJ";
+                    break;
+                case "HARGHITA":
+                    strCountyShortcut = "HR";
+                    break;
+                case "HUNEDOARA":
+                    strCountyShortcut = "HD";
+                    break;
+                case "IALOMITA":
+                    strCountyShortcut = "IL";
+                    break;
+                case "IASI":
+                    strCountyShortcut = "IS";
+                    break;
+                case "ILFOV":
+                    strCountyShortcut = "IF";
+                    break;
+                case "MARAMURES":
+                    strCountyShortcut = "MM";
+                    break;
+                case "MEHEDINTI":
+                    strCountyShortcut = "MH";
+                    break;
+                case "MURES":
+                    strCountyShortcut = "MS";
+                    break;
+                case "NEAMT":
+                    strCountyShortcut = "NT";
+                    break;
+                case "OLT":
+                    strCountyShortcut = "OT";
+                    break;
+                case "PRAHOVA":
+                    strCountyShortcut = "PH";
+                    break;
+                case "SALAJ":
+                    strCountyShortcut = "SJ";
+                    break;
+                case "SATU MARE":
+                    strCountyShortcut = "SM";
+                    break;
+                case "SIBIU":
+                    strCountyShortcut = "SB";
+                    break;
+                case "SUCEAVA":
+                    strCountyShortcut = "SV";
+                    break;
+                case "TELEORMAN":
+                    strCountyShortcut = "TL";
+                    break;
+                case "TIMIS":
+                    strCountyShortcut = "TM";
+                    break;
+                case "TULCEA":
+                    strCountyShortcut = "TL";
+                    break;
+                case "VASLUI":
+                    strCountyShortcut = "VS";
+                    break;
+                case "VILCEA":
+                    strCountyShortcut = "VL";
+                    break;
+                case "VALCEA":
+                    strCountyShortcut = "VL";
+                    break;
+                case "VRANCEA":
+                    strCountyShortcut = "VN";
+                    break;
+                case "BUCURESTI":
+                    strCountyShortcut = "B";
+                    break;
+                default:
+                    strCountyShortcut = strCountyName;
+                    break;
+            }
+
+            return strCountyShortcut;
+        }
+
     }
 }
