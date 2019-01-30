@@ -143,8 +143,6 @@ namespace CsvToInvoice
 
             invoice.DenArt = fields[3];
 
-            invoice.TvaArt = 0;
-
             invoice.Um = BUC;
 
             invoice.Cantitate = Double.Parse(fields[6]);
@@ -152,7 +150,9 @@ namespace CsvToInvoice
             invoice.Valoare = Double.Parse(fields[7]);
             invoice.Valoare = invoice.Valoare * invoice.Cantitate;
 
-            invoice.Tva = 0;
+            invoice.Tva = Double.Parse(fields[9]);
+
+            invoice.TvaArt = (int)Math.Round(invoice.Tva != 0 ? (invoice.Tva*100/invoice.Valoare) : 0);
 
             invoice.Cont = GetCont(invoice.DenArt);
 
