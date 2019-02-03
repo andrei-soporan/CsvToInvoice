@@ -111,7 +111,7 @@ namespace CsvToInvoice
 
             invoice.NrIesire = fields[1];
 
-            string NumeClient = Utils.RemoveDiacritics(fields[0]);
+            string NumeClient = Utils.RemoveDiacritics(fields[0]).ToUpper();
 
             invoice.Cod = clientTable.GetClientByName(NumeClient).Cod;
 
@@ -179,6 +179,7 @@ namespace CsvToInvoice
             }
             catch (SystemException ex)
             {
+                int t = 0;
             }
                 
 

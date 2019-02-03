@@ -27,10 +27,14 @@ namespace CsvToInvoice
 
         public Client GetClientByName(string clientName)
         {
-            Client client = (Client)Clients[clientName.ToLower()];
+            string key = clientName.ToLower();
+
+            Client client = (Client)Clients[key];
 
             if (client == null)
+            {
                 throw new SystemException("Clientul cu numele: " + clientName + " nu a fost gasit in tabela de clienti!");
+            }
 
             return client;
         }
@@ -65,13 +69,15 @@ namespace CsvToInvoice
 
         public void Add(Client client)
         {
-            Client existingClient = (Client)Clients[client.Denumire.ToLower().TrimEnd()];
+            String key = client.Denumire.ToString().ToLower().TrimEnd();
+
+            Client existingClient = (Client)Clients[key];
 
             if (existingClient != null)
                 //throw new SystemException("Clientul cu numele: " + existingClient.Denumire + " exista in tabela de clienti!");
                 return;
 
-            Clients.Add(client.Denumire.ToString().ToLower().TrimEnd(), client);
+            Clients.Add(key, client);
         }
 
 
