@@ -107,7 +107,7 @@ namespace CsvToInvoice
         protected void Insert(OleDbConnection con, Client client)
         {
 
-            var sql = String.Format("insert into {0} ( [COD],[DENUMIRE],[COD_FISCAL],[REG_COM],[ANALITIC],[ZS],[ADRESA],[JUDET],[BANCA],[CONT_BANCA],[FILIALA],[DELEGAT],[BI_SERIE],[BI_NUMAR],[BI_POL],[MASINA],[INF_SUPL],[AGENT],[DEN_AGENT],[GRUPA],[TIP_TERT],[TARA],[TEL],[EMAIL]) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            var sql = String.Format("insert into {0} ( [COD],[DENUMIRE],[COD_FISCAL],[REG_COM],[ANALITIC],[ZS],[DISCOUNT],[ADRESA],[JUDET],[BANCA],[CONT_BANCA],[FILIALA],[DELEGAT],[BI_SERIE],[BI_NUMAR],[BI_POL],[MASINA],[INF_SUPL],[AGENT],[DEN_AGENT],[GRUPA],[TIP_TERT],[TARA],[TEL],[EMAIL],[IS_TVA],[BLOCAT]) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 DbfTableName);
 
             OleDbCommand cmd = new OleDbCommand(sql, con);
@@ -118,6 +118,7 @@ namespace CsvToInvoice
             cmd.Parameters.Add(new OleDbParameter("parmREG_COM", client.RegCom));
             cmd.Parameters.Add(new OleDbParameter("parmANALITIC", client.Analitic));
             cmd.Parameters.Add(new OleDbParameter("parmZS", Client.NULL_INT));
+            cmd.Parameters.Add(new OleDbParameter("parmDISCOUNT", Client.NULL_DOUBLE));
             cmd.Parameters.Add(new OleDbParameter("parmADRESA", client.Adresa));
             cmd.Parameters.Add(new OleDbParameter("parmJUDET", client.Judet));
 
@@ -137,6 +138,8 @@ namespace CsvToInvoice
             cmd.Parameters.Add(new OleDbParameter("parmTARA", Client.NULL_STRING));
             cmd.Parameters.Add(new OleDbParameter("parmTEL", Client.NULL_STRING));
             cmd.Parameters.Add(new OleDbParameter("parmEMAIL", Client.NULL_STRING));
+            cmd.Parameters.Add(new OleDbParameter("parmIS_TVA", Client.NULL_INT));
+            cmd.Parameters.Add(new OleDbParameter("parmBLOCAT", Client.NULL_INT));
 
             // https://blogs.msdn.microsoft.com/selvar/2007/11/10/ole-db-resource-pooling/
             cmd.ExecuteNonQuery();

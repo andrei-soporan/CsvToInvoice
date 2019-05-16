@@ -143,6 +143,7 @@ namespace CsvToInvoice
                     strCountyShortcut = "BH";
                     break;
                 case "BISTRITA-NASAUD":
+                case "BISTRITA":
                     strCountyShortcut = "BN";
                     break;
                 case "BOTOSANI":
@@ -227,6 +228,7 @@ namespace CsvToInvoice
                     strCountyShortcut = "SJ";
                     break;
                 case "SATU MARE":
+                case "SATU-MARE":
                     strCountyShortcut = "SM";
                     break;
                 case "SIBIU":

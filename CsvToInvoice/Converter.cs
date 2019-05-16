@@ -145,16 +145,16 @@ namespace CsvToInvoice
 
             invoice.Um = BUC;
 
-            invoice.Cantitate = Double.Parse(fields[6]);
+            invoice.Cantitate = Double.Parse(fields[4]);
 
-            invoice.Valoare = Double.Parse(fields[7]);
+            invoice.Valoare = Double.Parse(fields[5]);
             invoice.Valoare = invoice.Valoare * invoice.Cantitate;
 
-            invoice.Tva = Double.Parse(fields[9]);
+            invoice.Tva = Double.Parse(fields[7]);
 
             invoice.TvaArt = (int)Math.Round(invoice.Tva != 0 ? (invoice.Tva*100/invoice.Valoare) : 0);
 
-            invoice.Cont = GetCont(invoice.DenArt);
+            invoice.Cont = GetCont(invoice);
 
             invoice.Grupa = "";
 
@@ -191,9 +191,9 @@ namespace CsvToInvoice
 
             client.Analitic = "4111." + client.Cod;
 
-            client.Adresa = Utils.RemoveDiacritics(fields[12]);
-            client.Adresa += ", " + Utils.RemoveDiacritics(fields[13]);
-            client.Judet = Utils.GetCountyShortcut(Utils.RemoveDiacritics(fields[14]));
+            client.Adresa = Utils.RemoveDiacritics(fields[11]);
+            client.Adresa += ", " + Utils.RemoveDiacritics(fields[12]);
+            client.Judet = Utils.GetCountyShortcut(Utils.RemoveDiacritics(fields[13]));
 
             client.NullFlag = 0;
 
@@ -202,16 +202,21 @@ namespace CsvToInvoice
         }
 
 
-        protected string GetCont(string productName)
+        //protected string GetCont(string productName)
+        protected string GetCont(Invoice invoice)
         {
             string cont;
-            if (productName.Equals("Taxa Transport"))
+            if (invoice.DenArt.Equals("Taxa Transport", StringComparison.OrdinalIgnoreCase))
             {
                 cont = "704";
             }
-            else if (productName.Equals("Discount Valoric"))
+            else if (invoice.DenArt.Equals("Discount Valoric"))
             {
                 cont = "767";
+            }
+            else if ( invoice.TvaArt == 5)
+            {
+                cont = "707.02";
             }
             else
             {
