@@ -1,0 +1,16 @@
+1.  A nume client
+2.  B nr. factura
+3.  C Data factura
+4.  D Denumire Produs
+5.  E Cantitate
+6.  F Pret
+7.  G Valoare fara TVA
+8.  H TVA
+9.  I pret_cu_tva
+10. J valoare_cu_tva
+11. K order_number	
+12. L adresa_strada
+13. M adresa_oras
+14. N adresa_judet
+15. O Tara
+16. P products.vat
